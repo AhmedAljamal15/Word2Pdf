@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 /// لو بتستخدم USB + adb reverse: خلّيها 127.0.0.1
 /// لو شبكة Wi-Fi: استخدم IP الكمبيوتر (مثال: 192.168.1.11)
-const String kApiBase = 'http://127.0.0.1:5000';
+const String kApiBase = 'https://word2pdf-production-5dc8.up.railway.app';
 
 class ConvertApi {
   static Future<String> convertFromMultipart(http.MultipartFile file) async {
