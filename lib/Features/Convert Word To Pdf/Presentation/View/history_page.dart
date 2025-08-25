@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:open_filex/open_filex.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:word_2_pdf/core/api.dart';
+import 'package:word_2_pdf/core/Services/api.dart';
 import 'pdf_viewer_page.dart';
 
 class HistoryPage extends StatefulWidget {

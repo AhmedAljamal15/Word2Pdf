@@ -1,11 +1,12 @@
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
+
+// لو عندك الصفحات دي فعلاً:
 import 'package:open_filex/open_filex.dart';
 import 'package:word_2_pdf/Features/Convert%20Word%20To%20Pdf/Presentation/View/history_page.dart';
 import 'package:word_2_pdf/Features/Convert%20Word%20To%20Pdf/Presentation/View/pdf_viewer_page.dart';
-import 'package:word_2_pdf/core/api.dart';
-import 'package:word_2_pdf/widgets/primary_button.dart';
+import 'package:word_2_pdf/core/Services/api.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -19,12 +20,12 @@ class _HomePageState extends State<HomePage> {
   String? lastPdfPath;
   String status = 'Upload a Word file (.docx) to convert it into PDF';
 
-  Future<void> _pickAndConvert() async {
+  Future<void> pickAndConvert(BuildContext context) async {
     try {
       final res = await FilePicker.platform.pickFiles(
         allowMultiple: false,
         type: FileType.custom,
-        allowedExtensions: ['docx', 'doc', 'rtf', 'odt'],
+        allowedExtensions: ['docx','doc','rtf','odt'],
         withReadStream: true,
         withData: true,
       );
@@ -47,26 +48,22 @@ class _HomePageState extends State<HomePage> {
         throw Exception('No stream/bytes/path available');
       }
 
-      final saved = await ConvertApi.convertFromMultipart(multipart);
-      setState(() {
-        lastPdfPath = saved;
-        status = 'Converted! Saved at:\n$saved';
-      });
+      final savedPath = await ConvertApi.convertFromMultipart(multipart);
 
-      // جرّب فتحه خارجيًا، لو مفيش عارض نعرضه داخل التطبيق
-      final r = await OpenFilex.open(saved);
-      if (r.type != ResultType.done && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('No external PDF viewer — opening in-app.')),
-        );
-        Navigator.push(context, MaterialPageRoute(builder: (_) => PdfViewerPage(path: saved)));
-      }
-    } catch (e) {
       if (!mounted) return;
       setState(() {
-        status = 'Error: $e';
+        lastPdfPath = savedPath;
+        status = 'Converted! Saved at:\n$savedPath';
       });
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Converted and saved: $savedPath')),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      setState(() => status = 'Error: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $e')),
+      );
     } finally {
       if (mounted) setState(() => loading = false);
     }
@@ -82,7 +79,10 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             tooltip: 'History',
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const HistoryPage()));
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const HistoryPage()),
+              );
             },
             icon: const Icon(Icons.history_rounded),
           ),
@@ -94,23 +94,36 @@ class _HomePageState extends State<HomePage> {
           margin: const EdgeInsets.all(20),
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(20),
-            boxShadow: const [BoxShadow(blurRadius: 24, color: Color(0x1A000000), offset: Offset(0, 10))]
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: const [
+              BoxShadow(
+                blurRadius: 24,
+                color: Color(0x1A000000),
+                offset: Offset(0, 10),
+              ),
+            ],
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Icon(Icons.picture_as_pdf_rounded, size: 64, color: cs.primary),
               const SizedBox(height: 10),
-              Text('Convert Word to PDF', style: Theme.of(context).textTheme.headlineSmall),
+              Text(
+                'Convert Word to PDF',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
               const SizedBox(height: 8),
               Text(status, textAlign: TextAlign.center),
               const SizedBox(height: 16),
-              PrimaryButton(
-                text: loading ? 'Converting...' : 'Upload Word (.docx)',
-                icon: Icons.cloud_upload_rounded,
-                onPressed: loading ? null : _pickAndConvert,
+
+              // بدل UploadButton الغيه مؤقتًا واستخدم ElevatedButton
+              ElevatedButton.icon(
+                onPressed: loading ? null : () => pickAndConvert(context),
+                icon: const Icon(Icons.cloud_upload_rounded),
+                label: Text(loading ? 'Converting...' : 'Upload Word (.docx)'),
               ),
+
               if (lastPdfPath != null) ...[
                 const SizedBox(height: 12),
                 Wrap(
@@ -122,8 +135,12 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () async {
                         final r = await OpenFilex.open(lastPdfPath!);
                         if (r.type != ResultType.done && mounted) {
-                          Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => PdfViewerPage(path: lastPdfPath!)));
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => PdfViewerPage(path: lastPdfPath!),
+                            ),
+                          );
                         }
                       },
                       icon: const Icon(Icons.open_in_new_rounded),
@@ -131,25 +148,31 @@ class _HomePageState extends State<HomePage> {
                     ),
                     OutlinedButton.icon(
                       onPressed: () {
-                        Navigator.push(context,
-                          MaterialPageRoute(builder: (_) => PdfViewerPage(path: lastPdfPath!)));
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => PdfViewerPage(path: lastPdfPath!),
+                          ),
+                        );
                       },
                       icon: const Icon(Icons.picture_as_pdf_rounded),
                       label: const Text('Preview in-app'),
                     ),
                     OutlinedButton.icon(
-                      onPressed: () async {
-                        // مشاركة الملف
-                        // استدعاء Share.shareXFiles متاح من share_plus (تحتاج import أعلاه لو أردت)
-                        // استخدمه بسهولة من history_page (مضاف هناك كمثال كامل)
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => const HistoryPage()));
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const HistoryPage(),
+                          ),
+                        );
                       },
                       icon: const Icon(Icons.share_rounded),
                       label: const Text('Share / History'),
                     ),
                   ],
-                )
-              ]
+                ),
+              ],
             ],
           ),
         ),

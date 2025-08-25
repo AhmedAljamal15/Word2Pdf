@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
-class PrimaryButton extends StatelessWidget {
+class UploadButton extends StatelessWidget {
   final String text;
   final IconData? icon;
   final VoidCallback? onPressed;
-  const PrimaryButton({super.key, required this.text, this.icon, this.onPressed});
+  const UploadButton({
+    super.key,
+    required this.text,
+    this.icon,
+    this.onPressed,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +24,9 @@ class PrimaryButton extends StatelessWidget {
           backgroundColor: cs.primary,
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
           elevation: 0,
         ),
       ),

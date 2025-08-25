@@ -2,11 +2,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
-import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:open_filex/open_filex.dart';
 
-// ✨ غيّر العنوان ده لـ IP جهاز الكمبيوتر عندك
 const String API_BASE = 'http://127.0.0.1:5000';
 
 class PdfViewerPage extends StatefulWidget {
@@ -25,14 +23,14 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
       final res = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['docx', 'doc', 'rtf', 'odt'],
-        withData: true,        // مهم عشان نقدر ناخد bytes لو مفيش path
-        withReadStream: true,  // عشان الملفات الكبيرة
+        withData: true,       
+        withReadStream: true, 
       );
       if (res == null) return;
 
       final f = res.files.single;
 
-      // ============= 1) تجهيز الملف =============
+   
       File? localFile;
       if (f.path != null) {
         localFile = File(f.path!);
@@ -53,7 +51,7 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
         statusText = 'Uploading & converting...';
       });
 
-      // ============= 2) إرسال للسيرفر =============
+     
       final uri = Uri.parse('$API_BASE/convert');
       final req = http.MultipartRequest('POST', uri);
 
@@ -78,7 +76,7 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
       final bytes = await resp.stream.toBytes();
       if (bytes.isEmpty) throw Exception('Empty PDF response');
 
-      // ============= 3) حفظ PDF محليًا =============
+      
       final docs = await getApplicationDocumentsDirectory();
       final outPath =
           '${docs.path}/converted_${DateTime.now().millisecondsSinceEpoch}.pdf';
@@ -90,7 +88,7 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
         statusText = 'Converted! Saved at:\n$outPath';
       });
 
-      // ============= 4) فتح الملف =============
+      
       final r = await OpenFilex.open(outPath);
       if (r.type != ResultType.done && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -121,8 +119,6 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // رأس الكارت: أنيميشن تتغير حسب الحالة
-             
               Icon(Icons.picture_as_pdf_rounded, size: 64, color: cs.primary),
               const SizedBox(height: 12),
               Text(

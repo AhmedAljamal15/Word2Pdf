@@ -16,7 +16,7 @@ class Word2PdfApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final seed = const Color(0xFF4F46E5); // بنفسجي هادي
+    final seed = const Color(0xFF4F46E5); 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Word → PDF',
@@ -24,7 +24,7 @@ class Word2PdfApp extends StatelessWidget {
         useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
           seedColor: seed,
-        ).copyWith(background: const Color(0xFFF6F7FB)),
+        ).copyWith(surface: const Color(0xFFF6F7FB)),
         scaffoldBackgroundColor: const Color(0xFFF6F7FB),
         appBarTheme: const AppBarTheme(centerTitle: true, elevation: 0),
       ),
