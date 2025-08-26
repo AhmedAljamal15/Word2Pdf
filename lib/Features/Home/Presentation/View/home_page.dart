@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 
 // لو عندك الصفحات دي فعلاً:
 import 'package:open_filex/open_filex.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:word_2_pdf/Features/Convert%20Word%20To%20Pdf/Presentation/View/history_page.dart';
 import 'package:word_2_pdf/Features/Convert%20Word%20To%20Pdf/Presentation/View/pdf_viewer_page.dart';
 import 'package:word_2_pdf/core/Services/api.dart';
@@ -107,7 +109,8 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.picture_as_pdf_rounded, size: 64, color: cs.primary),
+              Lottie.asset("assets/animations/upload.json",),
+              // Icon(Icons.picture_as_pdf_rounded, size: 64, color: cs.primary),
               const SizedBox(height: 10),
               Text(
                 'Convert Word to PDF',
@@ -117,7 +120,7 @@ class _HomePageState extends State<HomePage> {
               Text(status, textAlign: TextAlign.center),
               const SizedBox(height: 16),
 
-              // بدل UploadButton الغيه مؤقتًا واستخدم ElevatedButton
+              
               ElevatedButton.icon(
                 onPressed: loading ? null : () => pickAndConvert(context),
                 icon: const Icon(Icons.cloud_upload_rounded),

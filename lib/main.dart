@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:word_2_pdf/Features/Home/Presentation/View/home_page.dart';
@@ -8,7 +9,14 @@ Future<void> main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-  runApp(const Word2PdfApp());
+  runApp(
+    DevicePreview(
+      enabled: true,
+      builder: (context) 
+    {
+      return const Word2PdfApp();
+    },),
+  );
 }
 
 class Word2PdfApp extends StatelessWidget {
@@ -18,6 +26,7 @@ class Word2PdfApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final seed = const Color(0xFF4F46E5); 
     return MaterialApp(
+      builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
       title: 'Word → PDF',
       theme: ThemeData(

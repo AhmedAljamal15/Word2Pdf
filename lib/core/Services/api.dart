@@ -3,17 +3,15 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-// استخدم رابط Railway (HTTPS)
 const String kApiBase = 'https://word2pdf-production-5dc8.up.railway.app';
 
 class ConvertApi {
-  /// يرفع ملف الـ Word كـ Multipart → يستقبل PDF → يحفظه محليًا → يرجّع المسار
+
   static Future<String> convertFromMultipart(http.MultipartFile file) async {
     final uri = Uri.parse('$kApiBase/convert');
     final req = http.MultipartRequest('POST', uri)..files.add(file);
     final resp = await req.send();
 
-    // تأكد إن الاستجابة PDF مش JSON خطأ
     final ct = (resp.headers['content-type'] ?? '').toLowerCase();
     if (resp.statusCode != 200 || !ct.startsWith('application/pdf')) {
       final err = await resp.stream.bytesToString();
@@ -35,7 +33,6 @@ class ConvertApi {
     return outPath;
   }
 
-  // ================== History API ==================
 
   static Future<void> _pushToHistory(String path) async {
     final sp = await SharedPreferences.getInstance();
