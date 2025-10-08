@@ -11,6 +11,14 @@ A Word to PDF Converter application built with a Flutter frontend and a Flask ba
 - **Share & Open**: Easily share converted PDFs through various apps like WhatsApp and Email, or open them with external viewers.
 - **Live Backend**: The conversion backend is deployed on Railway, making it accessible online.
 
+## 🎥 Demo
+<p align="center">
+  <img src="assets/screenshots/App_Home.png" width="280" />
+  <img src="assets/screenshots/no_files_yet.png" width="280" />
+  <img src="assets/screenshots/history_files.png" width="280" />
+</p>
+
+
 ## Tech Stack
 
 ### Frontend (Flutter)
