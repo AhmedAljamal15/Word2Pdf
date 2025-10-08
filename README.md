@@ -1,105 +1,87 @@
-# 📘 Word → PDF Converter (Flutter + Flask)
+# Word to PDF Converter
 
- **Word to PDF Converter App** built with **Flutter** (frontend) and **Flask + LibreOffice** (backend).  
-The app allows users to upload Word documents (`.docx`, `.doc`, `.rtf`, `.odt`) and convert them to PDF instantly.
+A Word to PDF Converter application built with a Flutter frontend and a Flask backend that utilizes LibreOffice for conversion. This app allows users to upload Word documents (`.docx`, `.doc`, `.rtf`, `.odt`) and receive a PDF version instantly.
 
----
+## Features
 
-## 🚀 Features
+- **Document Upload**: Select and upload Word documents directly from your mobile device using `file_picker`.
+- **Instant Conversion**: Converts documents to PDF format via a Flask API powered by LibreOffice.
+- **In-App PDF Preview**: View the converted PDF files within the application using `pdfx`.
+- **Conversion History**: Keeps a local history of all converted files for easy access.
+- **Share & Open**: Easily share converted PDFs through various apps like WhatsApp and Email, or open them with external viewers.
+- **Live Backend**: The conversion backend is deployed on Railway, making it accessible online.
 
-- Upload Word documents from mobile (via `file_picker`)
--  Instant conversion to **PDF** using a Flask API with LibreOffice
-- Preview PDF inside the app (via `pdfx`)
--  Keep **History of converted files** (stored locally)
--  Share PDF files via WhatsApp, Email, etc.
-- 🌐 Backend deployed on **Railway** (works anywhere online)
-
----
-
-## 🛠️ Tech Stack
+## Tech Stack
 
 ### Frontend (Flutter)
-- `file_picker`
-- `http`
-- `pdfx`
-- `shared_preferences`
-- `open_filex`
-- `share_plus`
 
-### Backend (Flask + Docker)
-- Python 3.11 + Flask
-- LibreOffice (headless conversion)
-- Dockerized & deployed on [Railway](https://railway.app)
+- **UI & Core**: Flutter, Dart
+- **File Handling**: `file_picker`, `open_filex`, `path_provider`
+- **Networking**: `http`
+- **PDF**: `pdfx`
+- **Sharing**: `share_plus`
+- **Local Storage**: `shared_preferences`
+- **Animations**: `lottie`
 
-## ⚙️ Installation (Frontend)
+### Backend (Flask & Docker)
 
-1. Clone the repo:
-   git clone https://github.com/USERNAME/word2pdf-flutter.git
-   cd word2pdf-flutter
+- **Framework**: Python 3.11, Flask
+- **Conversion Engine**: LibreOffice (headless mode)
+- **Deployment**: Dockerized and deployed on [Railway](https://railway.app/)
 
+## Installation & Setup
 
-  # Installation (Backend locally with Docker): 
-  git clone https://github.com/USERNAME/word2pdf-server.git
-  cd word2pdf-server
+### Frontend (This Repository)
 
-  # Build image: 
-  docker build -t word2pdf . 
+1.  **Clone the repository:**
+    ```sh
+    git clone https://github.com/AhmedAljamal15/Word2Pdf.git
+    cd Word2Pdf
+    ```
 
-  # Run container: 
-  docker run -d -p 5000:5000 --name word2pdf word2pdf
+2.  **Install dependencies:**
+    ```sh
+    flutter pub get
+    ```
 
- # Test: 
- curl http://localhost:5000/health 
+3.  **Run the app:**
+    ```sh
+    flutter run
+    ```
+    The app is configured to use the live backend API by default.
 
- # 🌐 Online API (Deployed on Railway) : 
- Your backend is live at:
- https://word2pdf-production-5dc8.up.railway.app
+### Backend (Local Setup - Optional)
 
-Example endpoints:
+The backend code is in a separate repository. To run the conversion server locally with Docker:
 
-GET /health → check server status
+1.  **Clone the backend repository:**
+    ```sh
+    git clone https://github.com/AhmedAljamal15/word2pdf-server.git
+    cd word2pdf-server
+    ```
 
-POST /convert → upload Word file and get PDF  
+2.  **Build the Docker image:**
+    ```sh
+    docker build -t word2pdf .
+    ```
 
-# License : 
+3.  **Run the container:**
+    ```sh
+    docker run -d -p 5000:5000 --name word2pdf word2pdf
+    ```
 
-This project is open-source under the MIT License. 
+4.  **Test the local server:**
+    ```sh
+    curl http://localhost:5000/health
+    ```
 
-# Author
+## Live API
 
-Developed by **Ahmed Gad Elgaml**
+The backend is deployed on Railway and is publicly accessible.
 
+**API URL**: `https://word2pdf-production-5dc8.up.railway.app`
 
+### Endpoints
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
-
+-   `GET /health`: Checks the server status.
+-   `POST /convert`: Upload a Word file to receive a PDF in the response.
